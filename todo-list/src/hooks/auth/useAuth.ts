@@ -14,11 +14,11 @@ export function useRegister() {
   return useMutation(
     (data: AuthRegister) =>
       register(
-        data.firstNames,
-        data.lastNames,
-        data.ages,
-        data.usernames,
-        data.passwords,
+        data.firstName,
+        data.lastName,
+        data.age,
+        data.username,
+        data.password,
       ),
     {
       onSuccess: (data) => {
