@@ -1,0 +1,11 @@
+import { useMutation } from "react-query";
+import { AuthLogin, AuthRegister } from "../../types/auth/auth.type";
+import { login, register } from "../../api/auth";
+
+export function useLogin(){
+    return useMutation((data: AuthLogin) => login(data.username, data.password));
+}
+
+export function useRegister(){
+    return useMutation((data: AuthRegister) => register(data.firstNames, data.lastNames, data.ages, data.usernames, data.passwords));
+}
