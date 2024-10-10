@@ -1,4 +1,9 @@
-export async function login(username: string, password: string) {
+import { LoginResponse, RegisterResponse } from "../types/auth/auth.type";
+
+export async function login(
+  username: string,
+  password: string,
+): Promise<LoginResponse> {
   const response = await fetch("https://dummyjson.com/user/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -21,7 +26,7 @@ export async function register(
   age: number,
   username: string,
   password: string,
-) {
+): Promise<RegisterResponse> {
   const response = await fetch("https://dummyjson.com/users/add", {
     method: "POST",
     headers: { "Content-Type": "application/json" },

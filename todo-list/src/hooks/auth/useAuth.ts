@@ -1,29 +1,34 @@
-import { useMutation } from "react-query";
-import { AuthLogin, AuthRegister } from "../../types/auth/auth.type";
+import { useMutation, UseMutationResult } from "react-query";
+import { AuthLogin, AuthRegister, LoginResponse, RegisterResponse } from "../../types/auth/auth.type";
 import { login, register } from "../../api/auth";
 
-export function useLogin() {
-  return useMutation((data: AuthLogin) => login(data.username, data.password), {
-    onSuccess: (data) => {
-      localStorage.setItem("userId", data.id);
-    },
-  });
+// Define the type for the login mutation
+export function useLogin(): UseMutationResult<LoginResponse, Error, AuthLogin> {
+  return useMutation<LoginResponse, Error, AuthLogin>(
+    (data) => login(data.username, data.password),
+    {
+      onSuccess: (data) => {
+        localStorage.setItem("userId", String(data.id)); // Ensure you store a string in localStorage
+      },
+    }
+  );
 }
 
-export function useRegister() {
-  return useMutation(
-    (data: AuthRegister) =>
+// Define the type for the register mutation
+export function useRegister(): UseMutationResult<RegisterResponse, Error, AuthRegister> {
+  return useMutation<RegisterResponse, Error, AuthRegister>(
+    (data) =>
       register(
         data.firstName,
         data.lastName,
         data.age,
         data.username,
-        data.password,
+        data.password
       ),
     {
       onSuccess: (data) => {
-        localStorage.setItem("userId", data.id);
+        localStorage.setItem("userId", String(data.id)); // Ensure you store a string in localStorage
       },
-    },
+    }
   );
 }
