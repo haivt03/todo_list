@@ -14,7 +14,7 @@ export function TodoItems({ todo, onComplete }: TodoItem) {
         className="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-0"
       />
       <span className={`flex-1 ${todo.completed ? "line-through text-gray-500" : "text-gray-900"}`}>
-        {todo.title}
+        {todo.todo}
       </span>
     </li>
   );

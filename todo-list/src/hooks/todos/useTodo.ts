@@ -1,9 +1,9 @@
 import { useQuery } from "react-query";
 import { useState } from "react";
-import { addTodos, fetchTodos } from "../../api/todo";
+import { addTodos, fetchTodosByUser } from "../../api/todo";
 
 export function useTodos() {
-  return useQuery("todos", fetchTodos);
+  return useQuery("todos", fetchTodosByUser);
 }
 
 export function useAddTodo() {
