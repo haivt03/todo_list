@@ -1,4 +1,3 @@
-import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -9,11 +8,11 @@ import { TodoLists } from "./components/todos/TodoLists";
 import UserProfile from "./pages/UserProfile";
 import { QueryClient, QueryClientProvider } from "react-query";
 
-const querClient = new QueryClient();
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <QueryClientProvider client={querClient}>
+    <QueryClientProvider client={queryClient}>
       <Router>
         <Header />
         <Routes>
