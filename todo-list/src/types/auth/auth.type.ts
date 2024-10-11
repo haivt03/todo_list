@@ -1,4 +1,5 @@
 export interface AuthLogin {
+  id: number
   username: string;
   password: string;
 }
@@ -6,8 +7,20 @@ export interface AuthLogin {
 export interface LoginResponse {
   id: number;
   username: string;
+  password: string;
 }
+
+export interface RegisterResponse {
+  id: number;
+  firstNames: string;
+  lastNames: string;
+  ages: number;
+  usernames: string;
+  passwords: string;
+}
+
 export interface AuthRegister {
+  id: number;
   firstNames: string;
   lastNames: string;
   ages: number;

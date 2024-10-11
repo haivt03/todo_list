@@ -1,18 +1,31 @@
-export async function fetchTodos(){
-    const response = await fetch('https://dummyjson.com/todos');
-    return response.json();
+import { Todo } from "../types/todos/todos.type";
+import { safeFetch } from "./safeFetch";
+
+export async function fetchTodosByUserId(userId: number): Promise<Todo[]> {
+  const url = `${import.meta.env.VITE_API_URL}/todos/user/${userId}`;
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error("Failed to fetch todo");
   }
-  
-export async function addTodos(title: string, completed: boolean, userID: number){
-    const response = await fetch('https://dummyjson.com/todos/add', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        titles: title,
-        completeds: completed,
-        userId: userID
+  const todo: Todo[] = await response.json();
+  return todo;
+}
+
+export async function addTodos(
+  title: string,
+  completed: boolean,
+  userID: number,
+): Promise<Todo> {
+  const url = `${import.meta.env.VITE_API_URL}/todos/add`
+  const option: RequestInit = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      titles: title,
+      completeds: completed,
+      userId: userID,
     }),
-    });
-    return response.json();
   };
-  
+  const todosResponse: Todo = await safeFetch<Todo>(url, option);
+  return todosResponse;
+}
