@@ -3,16 +3,22 @@ import { AuthLogin, AuthRegister } from "../../types/auth/auth.type";
 import { login, register } from "../../api/auth";
 
 export function useLogin() {
-  return useMutation((data: AuthLogin) => login(data.username, data.password), {
-    onSuccess: (data) => {
-      localStorage.setItem("userId", data.id);
+  const mutation = useMutation({
+    mutationFn: (data: AuthLogin) => login(data.username, data.password),
+    onSuccess(data: AuthLogin) {
+      localStorage.setItem("userId", String(data.id));
     },
   });
+
+  const loginUser = (data: AuthLogin) => {
+    mutation.mutate(data);
+  };
+  return { loginUser, ...mutation };
 }
 
 export function useRegister() {
-  return useMutation(
-    (data: AuthRegister) =>
+  const mutation = useMutation({
+    mutationFn: (data: AuthRegister) =>
       register(
         data.firstNames,
         data.lastNames,
@@ -20,10 +26,12 @@ export function useRegister() {
         data.usernames,
         data.passwords,
       ),
-    {
-      onSuccess: (data) => {
-        localStorage.setItem("userId", data.id);
+      onSuccess(data: AuthRegister) {
+         localStorage.setItem("userId", String(data.id)) 
       },
-    },
-  );
+  });
+  const registerUser = (data: AuthRegister) =>{
+    mutation.mutate(data);
+  }
+  return {registerUser, ...mutation};
 }

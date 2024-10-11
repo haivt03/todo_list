@@ -1,9 +1,31 @@
 import { useQuery } from "react-query";
 import { useState } from "react";
-import { addTodos, fetchTodos } from "../../api/todo";
+import { addTodos, fetchTodosByUserId } from "../../api/todo";
+import { Todo } from "../../types/todos/todos.type";
 
 export function useTodos() {
-  return useQuery("todos", fetchTodos);
+  const userId = localStorage.getItem("userId");
+  const queryResult = useQuery<Todo[], Error>(
+    ["todos", userId],
+    () => fetchTodosByUserId(Number(userId)),
+    {
+      enabled: !!userId,
+      retry: 3,
+      onError: (error) => {
+        console.error("Error fetching todos:", error);
+      },
+    },
+  );
+
+  const { data: todos, error, isLoading, isError, isSuccess } = queryResult;
+  return {
+    todos,
+    error,
+    isLoading,
+    isError,
+    isSuccess,
+    refetch: queryResult.refetch,
+  };
 }
 
 export function useAddTodo() {
@@ -13,9 +35,9 @@ export function useAddTodo() {
   const handleAddTodo = async (title: string, completed: boolean) => {
     setIsLoading(true);
     try {
-      const userId = localStorage.getItem('userId');
+      const userId = localStorage.getItem("userId");
       if (!userId) {
-        throw new Error('No userId found in localStorage');
+        throw new Error("No userId found in localStorage");
       }
 
       const response = await addTodos(title, completed, Number(userId));
@@ -23,7 +45,7 @@ export function useAddTodo() {
       return response;
     } catch (err) {
       setIsLoading(false);
-      setError('Failed to add todo');
+      setError("Failed to add todo");
     }
   };
 
