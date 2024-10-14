@@ -2,6 +2,7 @@ import { useMutation } from "react-query";
 import { AuthLogin, AuthRegister } from "../../types/auth/auth.type";
 import { login, register } from "../../api/auth";
 
+<<<<<<< Updated upstream
 export function useLogin() {
   const mutation = useMutation({
     mutationFn: (data: AuthLogin) => login(data.username, data.password),
@@ -15,6 +16,8 @@ export function useLogin() {
   };
   return { loginUser, ...mutation };
 }
+=======
+>>>>>>> Stashed changes
 
 export function useRegister() {
   const mutation = useMutation({
