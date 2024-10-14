@@ -2,7 +2,7 @@ import { Todo } from "../types/todos/todos.type";
 import { safeFetch } from "./safeFetch";
 
 export async function fetchTodosByUserId(userId: number): Promise<Todo[]> {
-  const url = `${import.meta.env.VITE_API_URL}/todos/user/${userId}`;
+  const url = `/todos/user/${userId}`;
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error("Failed to fetch todo");
@@ -16,7 +16,7 @@ export async function addTodos(
   completed: boolean,
   userID: number,
 ): Promise<Todo> {
-  const url = `${import.meta.env.VITE_API_URL}/todos/add`
+  const url = `/todos/add`
   const option: RequestInit = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
