@@ -13,7 +13,7 @@ export function useLogin() {
     },
   });
 
-  const loginUser = (data: AuthLogin) => {
+  const loginUser = (data: AuthLoginInput) => {
     mutation.mutate(data);
   };
   return { loginUser, ...mutation };
