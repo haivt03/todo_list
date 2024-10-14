@@ -1,16 +1,16 @@
 import { useMutation } from "react-query";
-import { AuthLogin, AuthRegister } from "../../types/auth/auth.type";
+import { AuthLogin, AuthLoginInput, AuthRegister } from "../../types/auth/auth.type";
 import { login, register } from "../../api/auth";
 
 export function useLogin() {
-  const mutation = useMutation({
-    mutationFn: (data: AuthLogin) => login(data.username, data.password),
+  const mutation = useMutation<AuthLogin,Error,AuthLoginInput>({
+    mutationFn: (data: AuthLoginInput) => login(data.username, data.password),
     onSuccess(data: AuthLogin) {
       localStorage.setItem("userId", String(data.id));
     },
   });
 
-  const loginUser = (data: AuthLogin) => {
+  const loginUser = (data: AuthLoginInput) => {
     mutation.mutate(data);
   };
   return { loginUser, ...mutation };
