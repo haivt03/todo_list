@@ -4,12 +4,14 @@ import { Todo } from "../../types/todos/todos.type";
 
 export function useTodos() {
   const userId = localStorage.getItem("userId");
+  const parseUserId = userId ? Number(userId) : null;
   const queryResult = useQuery<Todo[], Error>(
-    ["todos", userId],
-    () => fetchTodosByUserId(Number(userId)),
+    ["todos", parseUserId],
+    () => fetchTodosByUserId(parseUserId as number),
     {
-      enabled: !!userId,
+      enabled: !!parseUserId,
       retry: 3,
+      retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
       onError: (error) => {
         console.error("Error fetching todos:", error);
       },
@@ -28,13 +30,18 @@ export function useTodos() {
 }
 
 export function useAddTodo() {
-  const mutation = useMutation<Todo, Error, { title: string; completed: boolean }>({
+  const mutation = useMutation<
+    Todo,
+    Error,
+    { title: string; completed: boolean }
+  >({
     mutationFn: async ({ title, completed }) => {
       const userId = localStorage.getItem("userId");
-      if (!userId) {
+      const parseUserId = userId ? Number(userId) : null;
+      if (!parseUserId) {
         throw new Error("No userId found in localStorage");
       }
-      return await addTodos(title, completed, Number(userId));
+      return addTodos(title, completed, parseUserId);
     },
     onError: (error) => {
       console.error("Failed to add todo", error.message);

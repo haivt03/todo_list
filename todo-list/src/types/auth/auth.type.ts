@@ -4,6 +4,11 @@ export interface AuthLogin {
   password: string;
 }
 
+export interface AuthLoginInput {
+  username: string;
+  password: string;
+}
+
 export interface LoginResponse {
   id: number;
   username: string;

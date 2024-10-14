@@ -1,12 +1,15 @@
 import { useMutation } from "react-query";
-import { AuthLogin, AuthRegister } from "../../types/auth/auth.type";
+import { AuthLogin, AuthLoginInput, AuthRegister } from "../../types/auth/auth.type";
 import { login, register } from "../../api/auth";
 
 export function useLogin() {
-  const mutation = useMutation({
-    mutationFn: (data: AuthLogin) => login(data.username, data.password),
+  const mutation = useMutation<AuthLogin, Error, AuthLoginInput>({
+    mutationFn: (data: AuthLoginInput) => login(data.username, data.password),
     onSuccess(data: AuthLogin) {
       localStorage.setItem("userId", String(data.id));
+    },
+    onError: (error: Error) => {
+      console.error("Login failed:", error.message);
     },
   });
 
@@ -28,6 +31,9 @@ export function useRegister() {
       ),
       onSuccess(data: AuthRegister) {
          localStorage.setItem("userId", String(data.id)) 
+      },
+      onError: (error: Error) => {
+        console.error("Registration failed:", error.message);
       },
   });
   const registerUser = (data: AuthRegister) =>{
