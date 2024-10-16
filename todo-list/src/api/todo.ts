@@ -3,10 +3,21 @@ import { safeFetch } from "./safeFetch";
 
 export async function fetchTodosByUserId(userId: number): Promise<Todo[]> {
   const url = `todos/user/${userId}`;
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error("Failed to fetch todo");
-  }
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      console.error("Server error response", errorResponse);
+      throw new Error(
+        `Failed to fetch todos: ${response.status} ${response.statusText}`,
+      );
+    }
+    const todos: Todo[] = await response.json();
+    return todos;
+  } catch (error) {
+    console.error("Error while fetching todos:", error);
+    throw new Error("An unexpected error occurred while fetching todos");
+}
 }
 
 export async function addTodos(
