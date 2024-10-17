@@ -1,24 +1,31 @@
 import { useMutation, useQuery } from "react-query";
 import { addTodos, fetchTodosByUserId } from "../../api/todo";
-import { Todo } from "../../types/todos/todos.type";
+import { Todo, TodoResponse } from "../../types/todos/todos.type";
 
 export function useTodos() {
   const userId = localStorage.getItem("userId");
   const parsedUserId = userId ? Number(userId) : NaN;
-  const queryResult = useQuery<Todo[], Error>(
+  const queryResult = useQuery<TodoResponse, Error>(
     ["todos", parsedUserId],
     () => fetchTodosByUserId(parsedUserId as number),
     {
       enabled: !!parsedUserId,
       retry: 3,
-      retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
       onError: (error) => {
         console.error("Error fetching todos:", error);
       },
     },
   );
 
-  const { data: todos, error, isLoading, isError, isSuccess } = queryResult;
+  const {
+    data: todos,
+    error,
+    isLoading,
+    isError,
+    isSuccess,
+  } = queryResult;
+
   return {
     todos,
     error,

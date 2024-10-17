@@ -1,10 +1,15 @@
 export interface Todo {
   id: number;
-  title: string;
+  todo: string;
   completed: boolean;
 }
 
-export interface TodoItem {
-  todo: Todo;
-  onComplete: (id: number) => void;
+export interface TodoResponse {
+  todos: Todo[];
+  total: number;
 }
+
+export interface TodoItemProps {
+  todo: Todo;
+}
+
