@@ -2,7 +2,7 @@ import { Todo } from "../types/todos/todos.type";
 import { safeFetch } from "./safeFetch";
 
 export async function fetchTodosByUserId(userId: number): Promise<Todo[]> {
-  const url = `/todos/user/${userId}`;
+  const url = `todos/user/${userId}`;
   try {
     const response = await fetch(url);
     if (!response.ok) {
@@ -17,7 +17,7 @@ export async function fetchTodosByUserId(userId: number): Promise<Todo[]> {
   } catch (error) {
     console.error("Error while fetching todos:", error);
     throw new Error("An unexpected error occurred while fetching todos");
-  }
+}
 }
 
 export async function addTodos(
@@ -25,7 +25,7 @@ export async function addTodos(
   completed: boolean,
   userID: number,
 ): Promise<Todo> {
-  const url = `/todos/add`;
+  const url = `todos/add`
   const option: RequestInit = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
