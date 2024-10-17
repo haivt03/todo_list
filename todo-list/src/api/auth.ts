@@ -1,4 +1,3 @@
-import { log } from "console";
 import { LoginResponse, RegisterResponse } from "../types/auth/auth.type";
 import { safeFetch } from "./safeFetch";
 
@@ -15,9 +14,6 @@ export async function login(
       password,
     }),
   };
-console.log(username);
-console.log(password);
-
   const loginResponse: LoginResponse = await safeFetch<LoginResponse>(
     url,
     option,

@@ -1,79 +1,169 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRegister } from "../../hooks/auth/useAuth";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormItem,
+  FormControl,
+  FormLabel,
+  FormField,
+} from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
-const Register: React.FC = () => {
-  const [firstNames, setFirstNames] = useState("");
-  const [lastNames, setLastNames] = useState("");
-  const [ages, setAges] = useState<number>(0);
-  const [usernames, setUsernames] = useState("");
-  const [passwords, setPasswords] = useState("");
+const registerSchema = z.object({
+  firstName: z.string().min(1, "First Name is required"),
+  lastName: z.string().min(1, "Last Name is required"),
+  age: z
+    .number()
+    .min(10, "You must be at least 10 years old")
+    .max(100, "Age must be under 100"),
+  username: z.string().min(1, "Username is required"),
+  password: z.string().min(6, "Password must be at least 6 characters long"),
+});
+
+function Register() {
   const { registerUser, isLoading, isError, error } = useRegister();
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    registerUser({ firstNames, lastNames, ages, usernames, passwords });
-  };
+  const form = useForm<z.infer<typeof registerSchema>>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      age: 0,
+      username: "",
+      password: "",
+    },
+  });
 
-  if (localStorage.getItem("userId")) {
+  function onSubmit(value: z.infer<typeof registerSchema>) {
+    registerUser(value);
     navigate("/login");
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-4">Register</h1>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            value={firstNames}
-            onChange={(e) => setFirstNames(e.target.value)}
-            placeholder="First Name"
-            className="p-2 border w-full mb-4"
-          />
-          <input
-            type="text"
-            value={lastNames}
-            onChange={(e) => setLastNames(e.target.value)}
-            placeholder="Last Name"
-            className="p-2 border w-full mb-4"
-          />
-          <input
-            type="number"
-            value={ages}
-            onChange={(e) => setAges(Number(e.target.value))}
-            placeholder="Age"
-            className="p-2 border w-full mb-4"
-          />
-          <input
-            type="text"
-            value={usernames}
-            onChange={(e) => setUsernames(e.target.value)}
-            placeholder="Username"
-            className="p-2 border w-full mb-4"
-          />
-          <input
-            type="password"
-            value={passwords}
-            onChange={(e) => setPasswords(e.target.value)}
-            placeholder="Password"
-            className="p-2 border w-full mb-4"
-          />
-          <button
-            type="submit"
-            className="bg-blue-500 text-white p-2 w-full"
-            disabled={isLoading}
-          >
-            {isLoading ? "Registering..." : "Register"}
-          </button>
-          {isError && (
-            <p className="text-red-500 mt-2">{(error as Error).message}</p>
-          )}
-        </form>
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-500 to-blue-600">
+      <div className="bg-white p-10 rounded-lg shadow-2xl w-full max-w-md transform hover:scale-105 transition-transform duration-500">
+        <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">
+          Create Account
+        </h1>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <FormField
+              control={form.control}
+              name="firstName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-lg font-medium text-gray-700">
+                    First Name
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter your first name"
+                      className="p-3 border-2 border-gray-300 rounded-lg w-full focus:border-green-500 focus:ring-2 focus:ring-green-500 mb-4 transition duration-300"
+                      {...field}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-lg font-medium text-gray-700">
+                    Last Name
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter your last name"
+                      className="p-3 border-2 border-gray-300 rounded-lg w-full focus:border-green-500 focus:ring-2 focus:ring-green-500 mb-4 transition duration-300"
+                      {...field}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="age"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-lg font-medium text-gray-700">
+                    Age
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Enter your age"
+                      className="p-3 border-2 border-gray-300 rounded-lg w-full focus:border-green-500 focus:ring-2 focus:ring-green-500 mb-4 transition duration-300"
+                      {...field}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-lg font-medium text-gray-700">
+                    Username
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter your username"
+                      className="p-3 border-2 border-gray-300 rounded-lg w-full focus:border-green-500 focus:ring-2 focus:ring-green-500 mb-4 transition duration-300"
+                      {...field}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-lg font-medium text-gray-700">
+                    Password
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="Enter your password"
+                      className="p-3 border-2 border-gray-300 rounded-lg w-full focus:border-green-500 focus:ring-2 focus:ring-green-500 mb-4 transition duration-300"
+                      {...field}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <div className="mt-3">
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600 hover:shadow-lg transition-all duration-300"
+              >
+                {isLoading ? "Registering..." : "Register"}
+              </Button>
+            </div>
+
+            {isError && (
+              <p className="text-red-500 mt-4 text-center">
+                {(error as Error).message}
+              </p>
+            )}
+          </form>
+        </Form>
       </div>
     </div>
   );
-};
+}
 
 export default Register;

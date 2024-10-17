@@ -34,9 +34,9 @@ export interface AuthRegister {
 }
 
 export interface AuthRegisterInput {
-  firstNames: string;
-  lastNames: string;
-  ages: number;
-  usernames: string;
-  passwords: string;
+  firstName: string;
+  lastName: string;
+  age: number;
+  username: string;
+  password: string;
 }
