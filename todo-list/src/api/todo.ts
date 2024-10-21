@@ -32,8 +32,8 @@ export async function addTodos(
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      titles: title,
-      completeds: completed,
+      todo: title,
+      completed: completed,
       userId: userID,
     }),
   };
