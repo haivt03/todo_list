@@ -45,6 +45,7 @@ export function useAddTodo() {
     mutationFn: async ({ title, completed }) => {
       const userId = localStorage.getItem("userId");
       const parsedUserId = userId ? Number(userId) : NaN;
+      completed = false;
       if (!parsedUserId) {
         throw new Error("No userId found in localStorage");
       }
