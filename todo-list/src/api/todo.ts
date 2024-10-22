@@ -1,7 +1,7 @@
-import { Todo, TodoResponse } from "../types/todos/todos.type";
+import { Todo } from "../types/todos/todos.type";
 import { safeFetch } from "./safeFetch";
 
-export async function fetchTodosByUserId(userId: number): Promise<TodoResponse> {
+export async function fetchTodosByUserId(userId: number): Promise<Todo[]> {
   const url = `${import.meta.env.VITE_API_URL}/todos/user/${userId}`;
   try {
     const response = await fetch(url);
@@ -13,7 +13,7 @@ export async function fetchTodosByUserId(userId: number): Promise<TodoResponse> 
         `Failed to fetch todos: ${response.status} ${response.statusText}`,
       );
     }
-    const todos: TodoResponse = await response.json();
+    const todos: Todo[] = await response.json();
     
     return todos;
   } catch (error) {

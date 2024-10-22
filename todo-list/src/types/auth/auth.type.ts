@@ -40,3 +40,7 @@ export interface AuthRegisterInput {
   username: string;
   password: string;
 }
+ export interface User{
+  username: string,
+  id: number
+ }
