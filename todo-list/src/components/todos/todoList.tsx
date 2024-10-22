@@ -10,12 +10,17 @@ export function TodoList() {
   const { handleAddTodo, isLoading: isAdding } = useAddTodo();
   const [newTodo, setNewTodo] = useState("");
 
-  const addNewTodo = () => {
+  const addNewTodo = async () => {
     if (newTodo.trim()) {
-      handleAddTodo(newTodo, false);
-      setNewTodo("");
+      try {
+        await handleAddTodo(newTodo, false);
+        setNewTodo("");
+      } catch (error) {
+        console.error("Failed to add todo:", error);
+      }
     }
   };
+  
 
   if (isLoading) {
     return (
