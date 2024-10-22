@@ -14,7 +14,7 @@ export function TodoList() {
 
   const combinedTodos = [
     ...zustandTodos, 
-    ...(queryTodos?.todo || []) 
+    ...(queryTodos?.todos || []) 
   ];
 
   const addNewTodo = async () => {
