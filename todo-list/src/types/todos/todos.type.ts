@@ -6,7 +6,6 @@ export interface Todo {
 
 export interface TodoResponse {
   todos: Todo[];
-  total: number;
 }
 
 export interface TodoItemProps {

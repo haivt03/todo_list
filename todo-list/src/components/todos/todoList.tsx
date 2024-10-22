@@ -4,11 +4,18 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { TodoItem } from "./todoItem";
 import { Todo } from "@/types/todos/todos.type";
+import { useTodoStore } from "@/hooks/store/useStore";
 
 export function TodoList() {
-  const { todos, isLoading, isError } = useTodos();
+  const zustandTodos = useTodoStore((state) => state.todos);
+  const { todos: queryTodos, isLoading, isError } = useTodos();
   const { handleAddTodo, isLoading: isAdding } = useAddTodo();
   const [newTodo, setNewTodo] = useState("");
+
+  const combinedTodos = [
+    ...zustandTodos, 
+    ...(queryTodos?.todo || []) 
+  ];
 
   const addNewTodo = async () => {
     if (newTodo.trim()) {
@@ -20,7 +27,6 @@ export function TodoList() {
       }
     }
   };
-  
 
   if (isLoading) {
     return (
@@ -53,8 +59,10 @@ export function TodoList() {
       </div>
 
       <div className="space-y-2">
-        {todos?.todos.length ? (
-          todos.todos.map((todo: Todo) => <TodoItem key={todo.id} todo={todo} />)
+        {combinedTodos.length ? (
+          combinedTodos.map((todo: Todo) => (
+            <TodoItem key={todo.id} todo={todo} />
+          ))
         ) : (
           <div className="text-gray-500 text-center">No todos available.</div>
         )}
