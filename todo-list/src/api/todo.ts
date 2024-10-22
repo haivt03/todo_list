@@ -14,7 +14,7 @@ export async function fetchTodosByUserId(userId: number): Promise<Todo[]> {
       );
     }
     const todos: Todo[] = await response.json();
-    
+
     return todos;
   } catch (error) {
     console.error("Error while fetching todos:", error);
@@ -40,3 +40,37 @@ export async function addTodos(
   const todosResponse: Todo = await safeFetch<Todo>(url, option);
   return todosResponse;
 }
+
+export async function updateTodo(
+  todoId: number,
+  title: string,
+  completed: boolean,
+) {
+  const url = `todos/${todoId}`;
+  const option: RequestInit = {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      todo: title,
+      completed: completed,
+    }),
+  };
+  const todoUpdate: Todo = await safeFetch<Todo>(url, option);
+  return todoUpdate;
+}
+
+export async function deleteTodo(todoId: number) {
+  const url = `todos/${todoId}`;
+  const option: RequestInit = {
+    method: "DELETE",
+  };
+
+  try {
+    await safeFetch<void>(url, option);
+    alert(`Todo with id ${todoId} successfully deleted.`);
+  } catch (error) {
+    console.error("Error while deleting todo:", error);
+    throw new Error("Failed to delete the todo: " + (error instanceof Error ? error.message : "Unknown error"));
+  }
+}
+
