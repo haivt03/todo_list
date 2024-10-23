@@ -3,6 +3,7 @@ import { TodoItemProps } from "../../types/todos/todos.type";
 import { Checkbox } from "../ui/checkbox";
 import { useState } from "react";
 import { useTodoStore } from "@/hooks/store/useStore";
+import clsx from "clsx";
 
 export function TodoItem({ todo }: TodoItemProps) {
   const [completed, setCompleted] = useState(todo.completed);
@@ -27,9 +28,20 @@ export function TodoItem({ todo }: TodoItemProps) {
   };
 
   const handleSaveTitle = () => {
-    if (title.trim()) {
-      handleUpdateTodo(todo.id, title, completed); 
-      setIsEditing(false);
+    const trimmedTitle = title.trim();
+
+    if (!trimmedTitle) {
+      console.warn("Cannot save an empty or whitespace-only title.");
+      return;
+    }
+
+    handleUpdateTodo(todo.id, trimmedTitle, completed);
+    setIsEditing(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSaveTitle();
     }
   };
 
@@ -47,18 +59,17 @@ export function TodoItem({ todo }: TodoItemProps) {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             onBlur={handleSaveTitle}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") handleSaveTitle(); // Save on Enter key
-            }}
+            onKeyDown={handleKeyDown}
             className="border-b border-gray-300 focus:outline-none focus:border-blue-500"
             autoFocus
           />
         ) : (
           <h1
-            className={`${
-              completed ? "line-through text-gray-500" : "text-gray-800"
-            } cursor-pointer`}
-            onClick={handleEditTitle} // Click to edit the title
+            className={clsx(
+              "ml-2 cursor-pointer",
+              completed ? "line-through text-gray-500" : "text-gray-800",
+            )}
+            onClick={handleEditTitle}
           >
             {title}
           </h1>

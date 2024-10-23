@@ -5,6 +5,7 @@ import { Button } from "../ui/button";
 import { TodoItem } from "./todoItem";
 import { Todo } from "@/types/todos/todos.type";
 import { useTodoStore } from "@/hooks/store/useStore";
+import { useMemo } from "react";
 
 export function TodoList() {
   const zustandTodos = useTodoStore((state) => state.todos);
@@ -12,19 +13,24 @@ export function TodoList() {
   const { handleAddTodo, isLoading: isAdding } = useAddTodo();
   const [newTodo, setNewTodo] = useState("");
 
-  const combinedTodos = [
-    ...zustandTodos, 
-    ...(queryTodos?.todos || []) 
-  ];
+  const combinedTodos = useMemo(
+    () => [...zustandTodos, ...(queryTodos?.todos || [])],
+    [zustandTodos, queryTodos?.todos],
+  );
 
   const addNewTodo = async () => {
-    if (newTodo.trim()) {
-      try {
-        await handleAddTodo(newTodo, false);
-        setNewTodo("");
-      } catch (error) {
-        console.error("Failed to add todo:", error);
-      }
+    const trimmedTodo = newTodo.trim();
+
+    if (!trimmedTodo) {
+      console.warn("Cannot add an empty or whitespace-only todo.");
+      return;
+    }
+
+    try {
+      await handleAddTodo(trimmedTodo, false);
+      setNewTodo("");
+    } catch (error) {
+      console.error("Failed to add todo:", error);
     }
   };
 
@@ -59,7 +65,7 @@ export function TodoList() {
       </div>
 
       <div className="space-y-2">
-        {combinedTodos.length ? (
+        {combinedTodos && combinedTodos.length > 0 ? (
           combinedTodos.map((todo: Todo) => (
             <TodoItem key={todo.id} todo={todo} />
           ))
