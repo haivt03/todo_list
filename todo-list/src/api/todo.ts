@@ -22,18 +22,14 @@ export async function fetchTodosByUserId(userId: number): Promise<Todo[]> {
   }
 }
 
-export async function addTodos(
-  title: string,
-  completed: boolean,
-  userID: number,
-): Promise<Todo> {
+export async function addTodos(title: string, userID: number): Promise<Todo> {
   const url = `todos/add`;
   const option: RequestInit = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       todo: title,
-      completed: completed,
+      completed: false,
       userId: userID,
     }),
   };
@@ -70,7 +66,9 @@ export async function deleteTodo(todoId: number) {
     alert(`Todo with id ${todoId} successfully deleted.`);
   } catch (error) {
     console.error("Error while deleting todo:", error);
-    throw new Error("Failed to delete the todo: " + (error instanceof Error ? error.message : "Unknown error"));
+    throw new Error(
+      "Failed to delete the todo: " +
+        (error instanceof Error ? error.message : "Unknown error"),
+    );
   }
 }
-

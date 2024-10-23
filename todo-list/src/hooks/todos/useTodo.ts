@@ -11,6 +11,7 @@ import { useTodoStore } from "../store/useStore";
 export function useTodos() {
   const userId = localStorage.getItem("userId");
   const parsedUserId = userId ? Number(userId) : NaN;
+
   const queryResult = useQuery<Todo[], Error>(
     ["todos", parsedUserId],
     () => fetchTodosByUserId(parsedUserId as number),
@@ -38,29 +39,33 @@ export function useTodos() {
 
 export function useAddTodo() {
   const addTodoStore = useTodoStore((state) => state.addTodo);
+
   const mutation = useMutation<
     Todo,
     Error,
     { title: string; completed: boolean }
   >({
-    mutationFn: async ({ title, completed }) => {
+    mutationFn: async ({ title }) => {
       const userId = localStorage.getItem("userId");
       const parsedUserId = userId ? Number(userId) : NaN;
-      completed = false;
+
       if (!parsedUserId) {
         throw new Error("No userId found in localStorage");
       }
-      const newTodo = await addTodos(title, completed, parsedUserId);
-      addTodoStore(newTodo);
+
+      const newTodo = await addTodos(title, parsedUserId);
       return newTodo;
+    },
+    onSuccess: (newTodo) => {
+      addTodoStore(newTodo);
     },
     onError: (error) => {
       console.error("Failed to add todo", error.message);
     },
   });
 
-  const handleAddTodo = (title: string, completed: boolean) => {
-    mutation.mutate({ title, completed });
+  const handleAddTodo = async (title: string, completed: boolean) => {
+    await mutation.mutateAsync({ title, completed });
   };
 
   return {
@@ -72,7 +77,8 @@ export function useAddTodo() {
 }
 
 export function useUpdateTodo() {
-  const updatedTodoStore = useTodoStore((state) => state.updateTodo);
+  const updateTodoStore = useTodoStore((state) => state.updateTodo);
+
   const mutation = useMutation<
     Todo,
     Error,
@@ -80,19 +86,21 @@ export function useUpdateTodo() {
   >({
     mutationFn: async ({ todoId, title, completed }) => {
       const updatedTodo = await updateTodo(todoId, title, completed);
-      updatedTodoStore(updatedTodo);
       return updatedTodo;
+    },
+    onSuccess(updatedTodo) {
+      updateTodoStore(updatedTodo);
     },
     onError: (error) => {
       console.error("Failed to update todo:", error.message);
     },
   });
-  const handleUpdateTodo = (
+  const handleUpdateTodo = async (
     todoId: number,
     title: string,
     completed: boolean,
   ) => {
-    mutation.mutate({ todoId, title, completed });
+    await mutation.mutateAsync({ todoId, title, completed });
   };
 
   return {
@@ -105,19 +113,22 @@ export function useUpdateTodo() {
 
 export function useDeleteTodo() {
   const removeTodoStore = useTodoStore((state) => state.removeTodo);
+
   const mutation = useMutation<void, Error, number>({
     mutationFn: async (todoId) => {
       await deleteTodo(todoId);
+    },
+    onSuccess: (_, todoId) => {
       removeTodoStore(todoId);
     },
     onError: (error) => {
       console.error("Failed to delete todo:", error.message);
-      alert("Failed to delete todo: " + error.message); // Optionally alert the user
+      alert("Failed to delete todo: " + error.message);
     },
   });
 
-  const handleDeleteTodo = (todoId: number) => {
-    mutation.mutate(todoId);
+  const handleDeleteTodo = async (todoId: number) => {
+    await mutation.mutateAsync(todoId);
   };
 
   return {

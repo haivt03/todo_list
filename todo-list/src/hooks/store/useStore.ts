@@ -1,5 +1,13 @@
-import { StoreState } from "@/types/store/store.type";
+import { Todo } from "@/types/todos/todos.type";
 import { create } from "zustand";
+
+type StoreState = {
+  todos: Todo[];
+  addTodo: (todo: Todo) => void;
+  setTodos: (todos: Todo[]) => void;
+  updateTodo: (updatedTodo: Todo) => void;
+  removeTodo: (todoId: number) => void;
+}
 
 export const useTodoStore = create<StoreState>((set) => ({
   todos: [],
