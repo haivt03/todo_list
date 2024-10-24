@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
-import { useLogout } from "@/hooks/auth/useAuth";
+import { useLogout } from "@/hooks/auth/useLogin";
 
 function Header() {
   const { logout } = useLogout();
