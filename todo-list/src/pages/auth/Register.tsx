@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { useRegister } from "../../hooks/auth/useAuth";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -12,6 +11,7 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useRegister } from "@/hooks/auth/useRegister";
 
 const registerSchema = z.object({
   firstName: z.string().min(1, "First Name is required"),

@@ -1,12 +1,20 @@
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 import { TodoList } from "@/components/todos/todoList";
 
 export function TodoPage() {
   return (
-    <div className="bg-gray-100 min-h-screen">
-      <div className="container mx-auto p-6">
-        <h1 className="text-4xl font-bold text-gray-800 mb-6 text-center">Todo List</h1>
-        <TodoList />
+    <div>
+      <Header />
+      <div className="bg-gray-100 min-h-screen">
+        <div className="container mx-auto p-6">
+          <h1 className="text-4xl font-bold text-gray-800 mb-6 text-center">
+            Todo List
+          </h1>
+          <TodoList />
+        </div>
       </div>
+      <Footer />
     </div>
   );
 }

@@ -1,5 +1,3 @@
-import { useNavigate } from "react-router-dom";
-import { useLogin } from "../../hooks/auth/useAuth";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -12,6 +10,7 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useLogin } from "@/hooks/auth/useLogin";
 
 const loginSchema = z.object({
   username: z.string().min(1, { message: "Username is required" }),
@@ -20,7 +19,6 @@ const loginSchema = z.object({
 
 function Login() {
   const { loginUser, isLoading, isError, error } = useLogin();
-  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -30,9 +28,8 @@ function Login() {
     },
   });
 
-  function onSubmit(value: z.infer<typeof loginSchema>) {
-    loginUser(value);
-    navigate("/todos");
+  async function onSubmit(value: z.infer<typeof loginSchema>) {
+    await loginUser(value);
   }
 
   return (

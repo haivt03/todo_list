@@ -1,4 +1,3 @@
-import { useAddTodo, useTodos } from "@/hooks/todos/useTodo";
 import { useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -6,17 +5,20 @@ import { TodoItem } from "./todoItem";
 import { Todo } from "@/types/todos/todos.type";
 import { useTodoStore } from "@/hooks/store/useStore";
 import { useMemo } from "react";
+import { useTodos } from "@/hooks/todos/useTodo";
+import { useAddTodo } from "@/hooks/todos/useAddTodo";
 
 export function TodoList() {
-  const zustandTodos = useTodoStore((state) => state.todos);
+  const todoList = useTodoStore((state) => state.todos);
   const { todos: queryTodos, isLoading, isError } = useTodos();
   const { handleAddTodo, isLoading: isAdding } = useAddTodo();
   const [newTodo, setNewTodo] = useState("");
 
   const combinedTodos = useMemo(
-    () => [...zustandTodos, ...(queryTodos?.todos || [])],
-    [zustandTodos, queryTodos?.todos],
+    () => [...todoList, ...(queryTodos || [])],
+    [todoList, queryTodos],
   );
+
 
   const addNewTodo = async () => {
     const trimmedTodo = newTodo.trim();
