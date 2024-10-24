@@ -1,5 +1,6 @@
 import { login } from "@/api/auth";
 import { AuthLogin, AuthLoginInput } from "@/types/auth/auth.type";
+import toast from "react-hot-toast";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 
@@ -9,10 +10,12 @@ export function useLogin() {
       mutationFn: (data: AuthLoginInput) => login(data.username, data.password),
       onSuccess(dataSuccess: AuthLogin) {
         localStorage.setItem("userId", String(dataSuccess.id));
+        toast.success("Successfully logged in!");
         navigate("/todos");
       },
       onError: (error: Error) => {
         console.error("Login failed:", error.message);
+        toast.error("Wrong password!");
       },
     });
   

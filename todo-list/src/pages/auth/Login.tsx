@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLogin } from "@/hooks/auth/useLogin";
+import toast, { Toaster } from "react-hot-toast";
 
 const loginSchema = z.object({
   username: z.string().min(1, { message: "Username is required" }),
@@ -18,8 +19,7 @@ const loginSchema = z.object({
 });
 
 function Login() {
-  const { loginUser, isLoading, isError, error } = useLogin();
-
+  const { loginUser, isLoading } = useLogin();
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -29,7 +29,11 @@ function Login() {
   });
 
   async function onSubmit(value: z.infer<typeof loginSchema>) {
-    await loginUser(value);
+    try {
+      await loginUser(value);
+    } catch (err) {
+      toast.error("Login failed. Please try again.");
+    }
   }
 
   return (
@@ -86,15 +90,10 @@ function Login() {
                 {isLoading ? "Logging in..." : "Login"}
               </Button>
             </div>
-
-            {isError && (
-              <p className="text-red-500 mt-4 text-center">
-                {(error as Error).message}
-              </p>
-            )}
           </form>
         </Form>
       </div>
+      <Toaster />
     </div>
   );
 }
