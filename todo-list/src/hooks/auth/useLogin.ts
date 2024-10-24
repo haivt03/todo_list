@@ -1,0 +1,33 @@
+import { login } from "@/api/auth";
+import { AuthLogin, AuthLoginInput } from "@/types/auth/auth.type";
+import { useMutation } from "react-query";
+import { useNavigate } from "react-router-dom";
+
+export function useLogin() {
+    const navigate = useNavigate();
+    const mutation = useMutation<AuthLogin, Error, AuthLoginInput>({
+      mutationFn: (data: AuthLoginInput) => login(data.username, data.password),
+      onSuccess(dataSuccess: AuthLogin) {
+        localStorage.setItem("userId", String(dataSuccess.id));
+        navigate("/todos");
+      },
+      onError: (error: Error) => {
+        console.error("Login failed:", error.message);
+      },
+    });
+  
+    const loginUser = (data: AuthLoginInput) => {
+      mutation.mutate(data);
+    };
+    return { loginUser, ...mutation };
+  }
+  
+  export function useLogout() {
+    const navigate = useNavigate();
+    const logout = () => {
+      localStorage.removeItem("userId");
+      navigate("/login");
+    };
+  
+    return { logout };
+  }

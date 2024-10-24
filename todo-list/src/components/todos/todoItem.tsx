@@ -1,9 +1,10 @@
-import { useDeleteTodo, useUpdateTodo } from "@/hooks/todos/useTodo";
 import { TodoItemProps } from "../../types/todos/todos.type";
 import { Checkbox } from "../ui/checkbox";
 import { useState } from "react";
 import { useTodoStore } from "@/hooks/store/useStore";
 import clsx from "clsx";
+import { useUpdateTodo } from "@/hooks/todos/useUpdateTodo";
+import { useDeleteTodo } from "@/hooks/todos/useDeleteTodo";
 
 export function TodoItem({ todo }: TodoItemProps) {
   const [completed, setCompleted] = useState(todo.completed);
