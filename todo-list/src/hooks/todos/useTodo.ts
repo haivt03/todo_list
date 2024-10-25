@@ -1,10 +1,12 @@
 import { useQuery } from "react-query";
 import { fetchTodosByUserId } from "../../api/todo";
 import { Todo } from "../../types/todos/todos.type";
+import { useAuthStore } from "../store/useAuthStore";
 
 export function useTodos() {
-  const userId = localStorage.getItem("userId");
+  const userId = useAuthStore((state) => state.userId);
   const parsedUserId = userId ? Number(userId) : NaN;
+
   const queryResult = useQuery<Todo[], Error>(
     ["todos", parsedUserId],
     () => fetchTodosByUserId(parsedUserId as number),

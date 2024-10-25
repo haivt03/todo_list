@@ -2,9 +2,11 @@ import { useMutation } from "react-query";
 import { useTodoStore } from "../store/useStore";
 import { Todo } from "@/types/todos/todos.type";
 import { addTodos } from "@/api/todo";
+import { useAuthStore } from "../store/useAuthStore";
 
 export function useAddTodo() {
   const addTodoStore = useTodoStore((state) => state.addTodo);
+  const userId = useAuthStore((state) => state.userId);
 
   const mutation = useMutation<
     Todo,
@@ -12,14 +14,11 @@ export function useAddTodo() {
     { title: string; completed: boolean }
   >({
     mutationFn: async ({ title }) => {
-      const userId = localStorage.getItem("userId");
-      const parsedUserId = userId ? Number(userId) : NaN;
-
-      if (!parsedUserId) {
-        throw new Error("No userId found in localStorage");
+      if (!userId) {
+        throw new Error("No userId found in store");
       }
 
-      const newTodo = await addTodos(title, parsedUserId);
+      const newTodo = await addTodos(title, userId);
       return newTodo;
     },
     onSuccess: (newTodo) => {

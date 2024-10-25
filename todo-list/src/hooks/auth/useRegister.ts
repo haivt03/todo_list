@@ -1,8 +1,11 @@
 import { register } from "@/api/auth";
 import { AuthRegister, AuthRegisterInput } from "@/types/auth/auth.type";
 import { useMutation } from "react-query";
+import { useAuthStore } from "../store/useAuthStore";
 
 export function useRegister() {
+  const setUserId = useAuthStore((state) => state.setUserId);
+
   const mutation = useMutation<AuthRegister, Error, AuthRegisterInput>({
     mutationFn: (data: AuthRegisterInput) =>
       register(
@@ -10,17 +13,19 @@ export function useRegister() {
         data.lastName,
         data.age,
         data.username,
-        data.password,
+        data.password
       ),
     onSuccess(data: AuthRegister) {
-      localStorage.setItem("userId", String(data.id));
+      setUserId(data.id);
     },
     onError: (error: Error) => {
       console.error("Registration failed:", error.message);
     },
   });
+
   const registerUser = (data: AuthRegisterInput) => {
     mutation.mutate(data);
   };
+
   return { registerUser, ...mutation };
 }
