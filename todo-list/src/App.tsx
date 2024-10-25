@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import { TodoPage } from "./pages/todo/TodoPage";
+import { Toaster } from "react-hot-toast";
 
 const queryClient = new QueryClient();
 
@@ -17,6 +18,7 @@ function App() {
           <Route path="/todos" element={<TodoPage />} />
         </Routes>
       </Router>
+      <Toaster />
     </QueryClientProvider>
   );
 }

@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLogin } from "@/hooks/auth/useLogin";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 const loginSchema = z.object({
   username: z.string().min(1, { message: "Username is required" }),
@@ -93,7 +93,6 @@ function Login() {
           </form>
         </Form>
       </div>
-      <Toaster />
     </div>
   );
 }
